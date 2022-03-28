@@ -21,7 +21,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          path: '${{ github.event.repository.name }}'
+          path: '${{ obsidian-publish-mkdocs }}'
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
@@ -31,15 +31,15 @@ jobs:
         with:
           repository: 'thats-all-forks/note-link-janitor'
           path: 'note-link-janitor'
-      - run: cd ${{ github.workspace }}/note-link-janitor && yarn install && yarn run build
+      - run: cd ${{ dr-code }}/note-link-janitor && yarn install && yarn run build
       - name: Run Note Link Janitor
       # Runs note-link-janitor only on the src folder in the repo where the *.md files are. Modify this as per your own setup
-        run: ${{ github.workspace }}/note-link-janitor/dist/index.js ${{ github.workspace }}/${{ github.event.repository.name }}/src
-      - run: cd ${{ github.workspace }}/${{ github.event.repository.name }} && git status .
+        run: ${{ dr-code }}/note-link-janitor/dist/index.js ${{ dr-code }}/${{ obsidian-publish-mkdocs }}/src
+      - run: cd ${{ dr-code }}/${{ obsidian-publish-mkdocs }} && git status .
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          repository: ${{ github.workspace }}/${{ github.event.repository.name }}/
+          repository: ${{ dr-code }}/${{ obsidian-publish-mkdocs }}/
           commit_message: Github Actions - Apply note link janitor changes
           
           # Optional commit user and author settings
