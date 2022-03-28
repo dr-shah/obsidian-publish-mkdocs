@@ -7,6 +7,37 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    note-link-janitor-run:
+    # Name the Job
+    name: Note Link Janitor Run
+    # Set the type of machine to run on
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks out a copy of your repository on the ubuntu-latest machine
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: '${{ obsidian-publish-mkdocs }}'
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Checkout code from note-link-janitor
+        uses: actions/checkout@v2
+        with:
+          repository: 'thats-all-forks/note-link-janitor'
+          path: 'note-link-janitor'
+      - run: cd ${{ dr-code }}/note-link-janitor && yarn install && yarn run build
+      - name: Run Note Link Janitor
+      # Runs note-link-janitor only on the src folder in the repo where the *.md files are. Modify this as per your own setup
+        run: ${{ dr-code }}/note-link-janitor/dist/index.js ${{ dr-code }}/${{ obsidian-publish-mkdocs }}/src
+      - run: cd ${{ dr-code }}/${{ obsidian-publish-mkdocs }} && git status .
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          repository: ${{ dr-code }}/${{ obsidian-publish-mkdocs }}/
+          commit_message: Github Actions - Apply note link janitor changes
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
