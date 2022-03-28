@@ -34,7 +34,7 @@ jobs:
       - run: cd ${{ dr-code }}/note-link-janitor && yarn install && yarn run build
       - name: Run Note Link Janitor
       # Runs note-link-janitor only on the src folder in the repo where the *.md files are. Modify this as per your own setup
-        run: ${{ dr-code }}/note-link-janitor/dist/index.js ${{ dr-code }}/${{ obsidian-publish-mkdocs }}/src
+        run: ${{ dr-code }}/note-link-janitor/dist/index.js ${{ dr-code }}/${{ obsidian-publish-mkdocs }}/docs
       - run: cd ${{ dr-code }}/${{ obsidian-publish-mkdocs }} && git status .
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
